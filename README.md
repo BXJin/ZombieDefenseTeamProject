@@ -1,1 +1,1 @@
-Master Branch 나중에 합칠곳
+Character 부분
