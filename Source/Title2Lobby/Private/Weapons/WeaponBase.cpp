@@ -50,6 +50,7 @@ void AWeaponBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 void AWeaponBase::EventTrigger_Implementation()
 {
 	//pOwnChar의 애니메이션 작동
+	UE_LOG(LogTemp, Warning, TEXT("EventTrigger_ImplementationEventTrigger_ImplementationEventTrigger_ImplementationEventTrigger_ImplementationEventTrigger_Implementation"));
 	m_pOwnChar->PlayAnimMontage(ShootMontage);
 	EventShoot_Implementation();
 }
