@@ -35,6 +35,15 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	UInputAction* FireInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PickUpAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* DropAction;
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
@@ -48,6 +57,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void StartFire(const FInputActionValue& Value);
 	void StopFire(const FInputActionValue& Value);
+	/// 추가 /// 
+	void PickUp(const FInputActionValue& Value);
+	void Reload(const FInputActionValue& Value);
+	void Drop(const FInputActionValue& Value);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -63,6 +76,49 @@ public:
 	void ServerFire();
 	bool ServerFire_Validate();
 	void ServerFire_Implementation();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void EquipWeapon(TSubclassOf<class AWeaponBase> WeaponClass);
+
+	UFUNCTION()
+	void WeaponSetOwner();
+
+	AActor* FindNearestWeapon();
+
+	UPROPERTY(BlueprintReadWrite)
+	AActor* m_EquipWeapon;
+
+	FTimerHandle WeaponSetOwnerTimer;
+public:
+	//네트워크 코드 영역
+	UFUNCTION(Server, Reliable)
+	void ReqPickUp();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPickUp(AActor* PickUpActor);
+
+	UFUNCTION(Client, Reliable)
+	void ResPressFClient();
+
+	UFUNCTION(Server, Reliable)
+	void ReqTrigger();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResTrigger();
+
+	UFUNCTION(Server, Reliable)
+	void ReqReload();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResReload();
+
+	UFUNCTION(Server, Reliable)
+	void ReqDrop();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResDrop();
+
 protected:
 	// 완성본에서는 weapon에서 실행
 	// 실제 라인 트레이스를 수행하는 함수
