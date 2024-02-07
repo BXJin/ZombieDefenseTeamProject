@@ -47,12 +47,16 @@ void AWeaponBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(AWeaponBase, m_Ammo);
 }
 
-void AWeaponBase::EventTrigger_Implementation()
+void AWeaponBase::EventTrigger_Implementation(bool IsPress)
 {
+	if (false == IsPress)
+	{
+		return;
+	}
 	//pOwnChar의 애니메이션 작동
 	UE_LOG(LogTemp, Warning, TEXT("EventTrigger_ImplementationEventTrigger_ImplementationEventTrigger_ImplementationEventTrigger_ImplementationEventTrigger_Implementation"));
 	m_pOwnChar->PlayAnimMontage(ShootMontage);
-	EventShoot_Implementation();
+	///EventShoot_Implementation();
 }
 
 void AWeaponBase::EventShoot_Implementation()
@@ -80,17 +84,7 @@ void AWeaponBase::EventShoot_Implementation()
 	FVector vStart = WeaponMesh->GetSocketLocation("Muzzle");
 	FVector vEnd = vStart + WeaponMesh->GetForwardVector() * 10000.0f;
 
-	///Weapontype이 berreta면 연사기능이 없음
-	if (KindOfWeapon == EWeaponType::Beretta)
-	{
-		ReqShoot(vStart, vEnd);
-	}
-	else
-	{
-		ReqShoot(vStart, vEnd);
-		GetWorldTimerManager().SetTimer(TimerHandle_ShotDelay, this, &AWeaponBase::EventShoot_Implementation, ShotDelay, false);
-	}
-	m_pOwnChar->PlayAnimMontage(ShootMontage);
+	ReqShoot(vStart, vEnd);
 }
 
 void AWeaponBase::EventReload_Implementation()

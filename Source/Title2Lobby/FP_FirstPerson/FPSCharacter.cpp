@@ -65,18 +65,16 @@ void AFPSCharacter::StartFire(const FInputActionValue& Value)
 	// pweapon의 m_ammo가 0이면 return
 	if (IsValid(pWeapon) && pWeapon->m_Ammo <= 0)
 		return;
-	ReqTrigger();
-	UE_LOG(LogTemp, Warning, TEXT("Fire"));
+	ReqTrigger(true);
 }
 
 void AFPSCharacter::StopFire(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Warning, TEXT("StopFire"));
 	AWeaponBase* pWeapon = Cast<AWeaponBase>(m_EquipWeapon);
-	if (IsValid(pWeapon))
-	{
-		pWeapon->GetWorldTimerManager().ClearTimer(pWeapon->TimerHandle_ShotDelay);
-	}
+	if (IsValid(pWeapon) && pWeapon->m_Ammo <= 0)
+		return;
+	ReqTrigger(false);
 }
 
 void AFPSCharacter::PickUp(const FInputActionValue& Value)
@@ -250,12 +248,12 @@ void AFPSCharacter::ResPressFClient_Implementation()
 {
 }
 
-void AFPSCharacter::ReqTrigger_Implementation()
+void AFPSCharacter::ReqTrigger_Implementation(bool IsPress)
 {
-	ResTrigger();
+	ResTrigger(IsPress);
 }
 
-void AFPSCharacter::ResTrigger_Implementation()
+void AFPSCharacter::ResTrigger_Implementation(bool IsPress)
 {
 	IWeaponInterface* WeaponInterface = Cast<IWeaponInterface>(m_EquipWeapon);
 	if (WeaponInterface == nullptr)
@@ -263,7 +261,7 @@ void AFPSCharacter::ResTrigger_Implementation()
 		return;
 	}
 
-	WeaponInterface->Execute_EventTrigger(m_EquipWeapon);
+	WeaponInterface->Execute_EventTrigger(m_EquipWeapon, IsPress);
 	//EventShoot_Implementation();
 }
 

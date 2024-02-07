@@ -102,10 +102,10 @@ public:
 	void ResPressFClient();
 
 	UFUNCTION(Server, Reliable)
-	void ReqTrigger();
+	void ReqTrigger(bool IsPress);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void ResTrigger();
+	void ResTrigger(bool IsPress);
 
 	UFUNCTION(Server, Reliable)
 	void ReqReload();
