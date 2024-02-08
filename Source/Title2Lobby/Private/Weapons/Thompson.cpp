@@ -29,6 +29,7 @@ void AThompson::LoopShootMontage()
 {
 	if (IsValid(ShootMontage) == false)
 		return;
-
+	if (m_pOwnChar == nullptr || m_Ammo == 0)
+		return;
 	m_pOwnChar->PlayAnimMontage(ShootMontage);
 }
