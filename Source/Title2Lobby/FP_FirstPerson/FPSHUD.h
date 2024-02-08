@@ -44,5 +44,11 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* HudWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UUserWidget> StoreHudWidgetClass;
+
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* StoreWidget;
+
 	FTimerHandle th_BindMyPlayerState;
 };

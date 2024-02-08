@@ -44,6 +44,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DropAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* StoreOpenAction;
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
@@ -68,6 +71,7 @@ protected:
 	void PickUp(const FInputActionValue& Value);
 	void Reload(const FInputActionValue& Value);
 	void Drop(const FInputActionValue& Value);
+	void StoreOpen(const FInputActionValue& Value);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -90,6 +94,9 @@ public:
 
 	UFUNCTION()
 	void WeaponSetOwner();
+
+	UFUNCTION()
+	void StoreUIOpen();
 
 	AActor* FindNearestWeapon();
 

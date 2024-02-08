@@ -11,6 +11,8 @@
 //플러그인 weaponbase추가
 #include "FPSPlayerState.h"
 #include "Weapons/WeaponBase.h"
+#include "FPSHUD.h"
+#include "Weapons/Store/StoreWidget.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -129,6 +131,11 @@ void AFPSCharacter::Drop(const FInputActionValue& Value)
 	ReqDrop();
 }
 
+void AFPSCharacter::StoreOpen(const FInputActionValue& Value)
+{
+	StoreUIOpen();
+}
+
 // Called every frame
 void AFPSCharacter::Tick(float DeltaTime)
 {
@@ -165,6 +172,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	EnhancedPlayerInputComponent->BindAction(PickUpAction, ETriggerEvent::Triggered, this, &AFPSCharacter::PickUp);
 	EnhancedPlayerInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Reload);
 	EnhancedPlayerInputComponent->BindAction(DropAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Drop);
+	EnhancedPlayerInputComponent->BindAction(StoreOpenAction, ETriggerEvent::Triggered, this, &AFPSCharacter::StoreOpen);
 }
 
 void AFPSCharacter::Fire()
@@ -218,6 +226,24 @@ void AFPSCharacter::WeaponSetOwner()
 
 	FTimerManager& tm = GetWorld()->GetTimerManager();
 	tm.SetTimer(WeaponSetOwnerTimer, this, &AFPSCharacter::WeaponSetOwner, 0.1f, false, 0.1f);
+}
+
+void AFPSCharacter::StoreUIOpen()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIOpen"));
+
+	APlayerController* PC = Cast<APlayerController>(GetController());
+
+	/// HUD에게 숨겨진 StoreUi를 hidden을 visible로 바꾸라고 요청
+	AFPSHUD* pHUD = Cast<AFPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (nullptr == pHUD)
+		return;
+	else
+	{
+		pHUD->StoreWidget->SetVisibility(ESlateVisibility::Visible);
+		PC->SetShowMouseCursor(true);
+		PC->SetInputMode(FInputModeUIOnly());
+	}
 }
 
 AActor* AFPSCharacter::FindNearestWeapon()

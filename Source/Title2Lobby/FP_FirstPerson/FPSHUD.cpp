@@ -12,6 +12,10 @@ void AFPSHUD::BeginPlay()
 	check(HudWidgetClass);
 
 	HudWidget = CreateWidget<UUserWidget>(GetWorld(), HudWidgetClass);
+	StoreWidget = CreateWidget<UUserWidget>(GetWorld(), StoreHudWidgetClass);
+	StoreWidget->AddToViewport();
+	StoreWidget->SetVisibility(ESlateVisibility::Hidden);
+
 	HudWidget->AddToViewport();
 
 	BindMyPlayerState();

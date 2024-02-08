@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Weapons/WeaponBase.h"
+#include "Weapons/Beretta.h"
 #include "FP_FirstPerson/FPSCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "FP_FirstPerson/FPSHUD.h"
@@ -17,20 +18,16 @@ void UStoreWidget::NativeConstruct()
 void UStoreWidget::OnBuyButtonClicked()
 {
 	// WeaponBase의 가격을 확인하고, 골드가 충분하면 구매
-	// Weaponbase 스폰.
-	AWeaponBase* Weapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass, FVector::ZeroVector, FRotator::ZeroRotator);
+	// pistol 스폰.
+	ABeretta* Pistol = NewObject<ABeretta>(GetOwningPlayer()->GetWorld(), ABeretta::StaticClass());
 	AFPSCharacter* Player = Cast<AFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetOwningPlayer()->GetWorld(), 0));
 	AFPSHUD* HUD = Cast<AFPSHUD>(GetOwningPlayer()->GetWorld()->GetFirstPlayerController()->GetHUD());
-	
-	///
-	Weapon->AttachToComponent(Player->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "WeaponSocket");
-	
-// 골드가 부족하면 구매 실패 메시지 출력
-// 구매 실패 메시지는 HUD에 출력
-// 구매 성공 메시지는 HUD에 출력
-// 구매 성공시, 아이템을 소환
-// 구매 성공시, 골드를 차감
-
 	// 골드가 충분하면 아이템을 구매하고, 아이템을 소환
+	// 플레이어 앞에 스폰시키기 
+	FVector SpawnLocation = Player->GetActorLocation() + Player->GetActorForwardVector() * 400.0f; // 100 units in front of the player
+	FRotator SpawnRotation = Player->GetActorRotation();
+	GetWorld()->SpawnActor<ABeretta>(WeaponClass, SpawnLocation, SpawnRotation);
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Pistol Spawned"));
 }
 
