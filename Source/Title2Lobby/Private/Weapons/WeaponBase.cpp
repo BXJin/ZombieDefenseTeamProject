@@ -6,13 +6,13 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
-#include "Net/UnrealNetwork.h" // DOREPLIFETIME »ç¿ëÀ» À§ÇÑ Çì´õÆÄÀÏ Ãß°¡
+#include "Net/UnrealNetwork.h" // DOREPLIFETIME ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Actor.h"
 
 // Sets default values
-AWeaponBase::AWeaponBase()
+AWeaponBase::AWeaponBase() :m_Ammo(30)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -122,7 +122,7 @@ void AWeaponBase::EventDrop_Implementation(ACharacter* PlayerOwnChar)
 	WeaponMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	WeaponMesh->SetSimulatePhysics(true);
 	//m_pOwnChar->bUseControllerRotationYaw = false;
-	// ¹«±â ¾ÕÀ¸·Î ³¯·Áº¸³»±â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	WeaponMesh->AddImpulse(PlayerOwnChar->GetActorForwardVector() * 500.0f);
 
 	m_pOwnChar = nullptr;
@@ -181,7 +181,7 @@ void AWeaponBase::OnUpdateAmmoToHud(int Ammo)
 	if (nullptr == pHud)
 		return;
 
-	//pHud->OnUpdateMyAmmo(Ammo);
+	pHud->OnUpdateMyAmmo(Ammo);
 }
 
 void AWeaponBase::OnRep_Ammo()

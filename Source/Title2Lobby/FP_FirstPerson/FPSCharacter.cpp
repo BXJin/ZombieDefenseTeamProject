@@ -9,6 +9,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Components/CapsuleComponent.h"
 //플러그인 weaponbase추가
+#include "FPSPlayerState.h"
 #include "Weapons/WeaponBase.h"
 
 // Sets default values
@@ -27,6 +28,27 @@ void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, 
+		FString::Printf(TEXT("TakeDamage DamageAmount=%f EventInstigator=%s DamageCauser=%s"), 
+			DamageAmount,
+			*EventInstigator->GetName(),
+			*DamageCauser->GetName()));
+
+	AFPSPlayerState* ps = Cast<AFPSPlayerState>(GetPlayerState());
+	if (false == IsValid(ps))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PS is not valid"));
+		return 0.0f;
+	}
+
+	ps->AddDamage(DamageAmount);
+
+	return DamageAmount;
 }
 
 void AFPSCharacter::Move(const FInputActionValue& Value)
@@ -146,7 +168,7 @@ bool AFPSCharacter::ServerFire_Validate()
 
 void AFPSCharacter::ServerFire_Implementation()
 {
-	PerformLineTrace();
+	
 }
 
 void AFPSCharacter::EquipWeapon(TSubclassOf<class AWeaponBase> WeaponClass)
@@ -297,31 +319,3 @@ void AFPSCharacter::ResDrop_Implementation()
 	InterfaceObj->Execute_EventDrop(m_EquipWeapon, this);
 	m_EquipWeapon = nullptr;
 }
-
-void AFPSCharacter::PerformLineTrace()
-{
-	
-	//FVector EyeLocation;
-	//FRotator EyeRotation;
-	//GetActorEyesViewPoint(EyeLocation, EyeRotation);
-	//
-	//FVector TraceEnd = EyeLocation + (EyeRotation.Vector() * 10000);
-	//
-	//FHitResult HitResult;
-	//FCollisionQueryParams QueryParams;
-	//QueryParams.AddIgnoredActor(this); // 자기 자신은 무시
-	//QueryParams.bTraceComplex = true;
-	//
-	//if (GetWorld()->LineTraceSingleByChannel(HitResult, EyeLocation, TraceEnd, ECC_Visibility, QueryParams)) {
-	//	// 히트 이벤트 처리
-	//	AActor* HitActor = HitResult.GetActor();
-	//	// HitActor에 대한 처리 로직 추가
-	//	// 데미지 떨어지는 로직 추가
-	//}
-	//// 라인트레이스 시각화
-	//if (GetWorld())
-	//{
-	//	DrawDebugLine(GetWorld(),EyeLocation,TraceEnd,FColor::Red,false,1.0f, 0, 1.0f);
-	//}
-}
-

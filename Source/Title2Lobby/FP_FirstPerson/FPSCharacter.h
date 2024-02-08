@@ -51,6 +51,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 protected:
 	// 키입력 함수
 	void Move(const FInputActionValue& Value);
@@ -122,5 +124,5 @@ public:
 protected:
 	// 완성본에서는 weapon에서 실행
 	// 실제 라인 트레이스를 수행하는 함수
-	void PerformLineTrace();
+	
 };

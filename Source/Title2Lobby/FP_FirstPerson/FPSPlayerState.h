@@ -9,6 +9,7 @@
 /**
  * 
  */
+class ACharacter;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDele_UpdateHp, float, CurHp, float, MaxHp);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDele_UpdateAmmo, int, Ammo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDele_UpdateGold, int, Gold);
@@ -17,6 +18,9 @@ class TITLE2LOBBY_API AFPSPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void BeginPlay() override;
+	
 public:
 	AFPSPlayerState();
 public:
@@ -27,16 +31,15 @@ public:
 	void AddHeal(float Heal);
 
 	UFUNCTION()
-	void AddAmmo();
+	void SetAmmo(int32 _Ammo);
 
 	UFUNCTION()
-	void UseAmmo();
+	void UseAmmo(int32 _Ammo);
 	
-	UFUNCTION()
-	void AddGold();
+	UFUNCTION(BlueprintCallable)
+	void SetGold(int32 _Gold);
 
-	UFUNCTION()
-	void UseGold();
+	
 
 public:
 	UFUNCTION()
@@ -65,4 +68,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
 	FDele_UpdateGold m_Dele_UpdateGold;
+
+	UPROPERTY(BlueprintReadWrite)
+	ACharacter* m_pOwnChar;
 };

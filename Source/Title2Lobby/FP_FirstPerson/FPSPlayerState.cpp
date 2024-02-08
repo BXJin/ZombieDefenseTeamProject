@@ -2,8 +2,19 @@
 
 
 #include "FPSPlayerState.h"
+
+#include "FPSHUD.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
-AFPSPlayerState::AFPSPlayerState() : m_CurHp(100), m_Ammo(30), m_Gold(1000)
+#include "Weapons/WeaponBase.h"
+
+void AFPSPlayerState::BeginPlay()
+{
+	Super::BeginPlay();
+	OnRep_CurHp();
+}
+
+AFPSPlayerState::AFPSPlayerState() : m_CurHp(100)
 {
 }
 void AFPSPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -25,29 +36,31 @@ void AFPSPlayerState::AddDamage(float Damage)
 void AFPSPlayerState::AddHeal(float Heal)
 {
 }
-void AFPSPlayerState::AddAmmo()
-{
-	// 안에 논리는 바뀔 수 있음
-	m_Ammo = m_Ammo + 1; // 숫자는 바뀔 수 있음
 
+void AFPSPlayerState::SetAmmo(int32 _Ammo)
+{
+	m_Ammo = _Ammo;
 	OnRep_Ammo();
 }
 
-void AFPSPlayerState::UseAmmo()
+
+void AFPSPlayerState::UseAmmo(int32 _Ammo)
 {
+	
 }
 
-void AFPSPlayerState::AddGold()
+void AFPSPlayerState::SetGold(int32 _Gold)
 {
 	// 안에 논리는 바뀔 수 있음
-	m_Gold = m_Gold + 100; // 숫자는 바뀔 수 있음
-
+	m_Gold += _Gold; // 숫자는 바뀔 수 있음
+	
+	// 몬스터 잡았을 때 
 	OnRep_Gold();
+	
 }
 
-void AFPSPlayerState::UseGold()
-{
-}
+
+
 //////////////////////////////////////////////////////////////////////////////////////
 // 다른 시스템과 공유
 void AFPSPlayerState::OnRep_CurHp()
@@ -71,5 +84,5 @@ void AFPSPlayerState::OnRep_Gold()
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_Gold = %d"), m_Gold));
 
 	if (m_Dele_UpdateGold.IsBound())
-		m_Dele_UpdateAmmo.Broadcast(m_Gold);
+		m_Dele_UpdateGold.Broadcast(m_Gold); // 이전에는 m_Dele_UpdateAmmo.Broadcast(m_Gold);
 }
