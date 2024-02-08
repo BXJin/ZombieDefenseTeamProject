@@ -52,7 +52,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	//virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void GetDamage(float Damage);
+
 protected:
 	// 키입력 함수
 	void Move(const FInputActionValue& Value);

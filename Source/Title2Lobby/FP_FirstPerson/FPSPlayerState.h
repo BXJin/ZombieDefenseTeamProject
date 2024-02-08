@@ -40,7 +40,6 @@ public:
 	void SetGold(int32 _Gold);
 
 	
-
 public:
 	UFUNCTION()
 	void OnRep_CurHp();

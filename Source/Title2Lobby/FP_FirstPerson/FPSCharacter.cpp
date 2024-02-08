@@ -30,25 +30,40 @@ void AFPSCharacter::BeginPlay()
 	
 }
 
-float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, 
-		FString::Printf(TEXT("TakeDamage DamageAmount=%f EventInstigator=%s DamageCauser=%s"), 
-			DamageAmount,
-			*EventInstigator->GetName(),
-			*DamageCauser->GetName()));
+//float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+//	AActor* DamageCauser)
+//{
+//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, 
+//		FString::Printf(TEXT("TakeDamage DamageAmount=%f EventInstigator=%s DamageCauser=%s"), 
+//			DamageAmount,
+//			*EventInstigator->GetName(),
+//			*DamageCauser->GetName()));
+//
+//	AFPSPlayerState* ps = Cast<AFPSPlayerState>(GetPlayerState());
+//	if (false == IsValid(ps))
+//	{
+//		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PS is not valid"));
+//		return 0.0f;
+//	}
+//
+//	ps->AddDamage(DamageAmount);
+//
+//	return DamageAmount;
+//}
 
+void AFPSCharacter::GetDamage(float Damage)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue,
+		FString::Printf(TEXT("TakeDamage DamageAmount")));
 	AFPSPlayerState* ps = Cast<AFPSPlayerState>(GetPlayerState());
 	if (false == IsValid(ps))
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PS is not valid"));
-		return 0.0f;
+		return;
 	}
 
-	ps->AddDamage(DamageAmount);
+	ps->AddDamage(Damage);
 
-	return DamageAmount;
 }
 
 void AFPSCharacter::Move(const FInputActionValue& Value)
