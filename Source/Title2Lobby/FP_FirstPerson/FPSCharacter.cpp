@@ -5,6 +5,14 @@
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
+#include "Net/UnrealNetwork.h"
+#include "Components/CapsuleComponent.h"
+//플러그인 weaponbase추가
+#include "FPSPlayerState.h"
+#include "Weapons/WeaponBase.h"
+#include "FPSHUD.h"
+#include "Weapons/Store/StoreWidget.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -22,6 +30,42 @@ void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+//float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+//	AActor* DamageCauser)
+//{
+//	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, 
+//		FString::Printf(TEXT("TakeDamage DamageAmount=%f EventInstigator=%s DamageCauser=%s"), 
+//			DamageAmount,
+//			*EventInstigator->GetName(),
+//			*DamageCauser->GetName()));
+//
+//	AFPSPlayerState* ps = Cast<AFPSPlayerState>(GetPlayerState());
+//	if (false == IsValid(ps))
+//	{
+//		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PS is not valid"));
+//		return 0.0f;
+//	}
+//
+//	ps->AddDamage(DamageAmount);
+//
+//	return DamageAmount;
+//}
+
+void AFPSCharacter::GetDamage(float Damage)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue,
+		FString::Printf(TEXT("TakeDamage DamageAmount")));
+	AFPSPlayerState* ps = Cast<AFPSPlayerState>(GetPlayerState());
+	if (false == IsValid(ps))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PS is not valid"));
+		return;
+	}
+
+	ps->AddDamage(Damage);
+
 }
 
 void AFPSCharacter::Move(const FInputActionValue& Value)
@@ -56,11 +100,40 @@ void AFPSCharacter::Look(const FInputActionValue& Value)
 
 void AFPSCharacter::StartFire(const FInputActionValue& Value)
 {
-	Fire();
+	AWeaponBase* pWeapon = Cast<AWeaponBase>(m_EquipWeapon);
+	// pweapon의 m_ammo가 0이면 return
+	if (IsValid(pWeapon) && pWeapon->m_Ammo <= 0)
+		return;
+	ReqTrigger(true);
 }
 
 void AFPSCharacter::StopFire(const FInputActionValue& Value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("StopFire"));
+	AWeaponBase* pWeapon = Cast<AWeaponBase>(m_EquipWeapon);
+	if (IsValid(pWeapon) && pWeapon->m_Ammo <= 0)
+		return;
+	ReqTrigger(false);
+}
+
+void AFPSCharacter::PickUp(const FInputActionValue& Value)
+{
+	ReqPickUp();
+}
+
+void AFPSCharacter::Reload(const FInputActionValue& Value)
+{
+	ReqReload();
+}
+
+void AFPSCharacter::Drop(const FInputActionValue& Value)
+{
+	ReqDrop();
+}
+
+void AFPSCharacter::StoreOpen(const FInputActionValue& Value)
+{
+	StoreUIOpen();
 }
 
 // Called every frame
@@ -96,15 +169,19 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	EnhancedPlayerInputComponent->BindAction(JumpInputAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 	EnhancedPlayerInputComponent->BindAction(FireInputAction, ETriggerEvent::Started, this, &AFPSCharacter::StartFire);
 	EnhancedPlayerInputComponent->BindAction(FireInputAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopFire);
+	EnhancedPlayerInputComponent->BindAction(PickUpAction, ETriggerEvent::Triggered, this, &AFPSCharacter::PickUp);
+	EnhancedPlayerInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Reload);
+	EnhancedPlayerInputComponent->BindAction(DropAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Drop);
+	EnhancedPlayerInputComponent->BindAction(StoreOpenAction, ETriggerEvent::Triggered, this, &AFPSCharacter::StoreOpen);
 }
 
 void AFPSCharacter::Fire()
 {
-	if (HasAuthority()) {
-		PerformLineTrace();
-	} else {
-		ServerFire();
-	}
+	//if (HasAuthority()) {
+	//	PerformLineTrace();
+	//} else {
+	//	ServerFire();
+	//}
 }
 
 bool AFPSCharacter::ServerFire_Validate()
@@ -114,33 +191,172 @@ bool AFPSCharacter::ServerFire_Validate()
 
 void AFPSCharacter::ServerFire_Implementation()
 {
-	PerformLineTrace();
-}
-
-void AFPSCharacter::PerformLineTrace()
-{
 	
-	FVector EyeLocation;
-	FRotator EyeRotation;
-	GetActorEyesViewPoint(EyeLocation, EyeRotation);
+}
 
-	FVector TraceEnd = EyeLocation + (EyeRotation.Vector() * 10000);
-
-	FHitResult HitResult;
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this); // 자기 자신은 무시
-	QueryParams.bTraceComplex = true;
-
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, EyeLocation, TraceEnd, ECC_Visibility, QueryParams)) {
-		// 히트 이벤트 처리
-		AActor* HitActor = HitResult.GetActor();
-		// HitActor에 대한 처리 로직 추가
-		// 데미지 떨어지는 로직 추가
-	}
-	// 라인트레이스 시각화
-	if (GetWorld())
+void AFPSCharacter::EquipWeapon(TSubclassOf<class AWeaponBase> WeaponClass)
+{
+	if (false == HasAuthority())
 	{
-		DrawDebugLine(GetWorld(),EyeLocation,TraceEnd,FColor::Red,false,1.0f, 0, 1.0f);
+		return;
+	}
+
+	m_EquipWeapon = GetWorld()->SpawnActor<AWeaponBase>(WeaponClass);
+
+	AWeaponBase* pWeapon = Cast<AWeaponBase>(m_EquipWeapon);
+	if (pWeapon == nullptr)
+	{
+		return;
+	}
+
+	pWeapon->m_pOwnChar = this;
+
+	WeaponSetOwner();
+
+	m_EquipWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("WeaponSocket"));
+}
+
+void AFPSCharacter::WeaponSetOwner()
+{
+	if (IsValid(GetController()))
+	{
+		m_EquipWeapon->SetOwner(GetController());
+		return;
+	}
+
+	FTimerManager& tm = GetWorld()->GetTimerManager();
+	tm.SetTimer(WeaponSetOwnerTimer, this, &AFPSCharacter::WeaponSetOwner, 0.1f, false, 0.1f);
+}
+
+void AFPSCharacter::StoreUIOpen()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIOpen"));
+
+	APlayerController* PC = Cast<APlayerController>(GetController());
+
+	/// HUD에게 숨겨진 StoreUi를 hidden을 visible로 바꾸라고 요청
+	AFPSHUD* pHUD = Cast<AFPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (nullptr == pHUD)
+		return;
+	else
+	{
+		pHUD->StoreWidget->SetVisibility(ESlateVisibility::Visible);
+		PC->SetShowMouseCursor(true);
+		PC->SetInputMode(FInputModeUIOnly());
 	}
 }
 
+AActor* AFPSCharacter::FindNearestWeapon()
+{
+	TArray<AActor*> actors;
+	GetCapsuleComponent()->GetOverlappingActors(actors, AWeaponBase::StaticClass());
+
+	double nearestDist = 9999999.0f;
+	AActor* pNearestActor = nullptr;
+	for (AActor* pTarget : actors)
+	{
+		if (m_EquipWeapon == pTarget)
+			continue;
+
+		double dist = FVector::Distance(GetActorLocation(), pTarget->GetActorLocation());
+		if (dist >= nearestDist)
+			continue;
+
+		nearestDist = dist;
+		pNearestActor = pTarget;
+	}
+
+	return pNearestActor;
+}
+
+void AFPSCharacter::ReqPickUp_Implementation()
+{
+	AActor* pNearestActor = FindNearestWeapon();
+
+	if (false == IsValid(pNearestActor))
+		return;
+
+	if (nullptr != m_EquipWeapon)
+	{
+		m_EquipWeapon->SetOwner(nullptr);
+	}
+
+	pNearestActor->SetOwner(GetController());
+
+	ResPickUp(pNearestActor);
+}
+
+void AFPSCharacter::ResPickUp_Implementation(AActor* PickUpActor)
+{
+	if (nullptr != m_EquipWeapon)
+	{
+		IWeaponInterface* InterfaceObj = Cast<IWeaponInterface>(m_EquipWeapon);
+		if (nullptr == InterfaceObj)
+			return;
+
+		InterfaceObj->Execute_EventDrop(m_EquipWeapon, this);
+		m_EquipWeapon = nullptr;
+	}
+
+	m_EquipWeapon = PickUpActor;
+
+	IWeaponInterface* InterfaceObj = Cast<IWeaponInterface>(m_EquipWeapon);
+	if (nullptr == InterfaceObj)
+		return;
+
+	InterfaceObj->Execute_EventPickUp(m_EquipWeapon, this);
+}
+
+void AFPSCharacter::ResPressFClient_Implementation()
+{
+}
+
+void AFPSCharacter::ReqTrigger_Implementation(bool IsPress)
+{
+	ResTrigger(IsPress);
+}
+
+void AFPSCharacter::ResTrigger_Implementation(bool IsPress)
+{
+	IWeaponInterface* WeaponInterface = Cast<IWeaponInterface>(m_EquipWeapon);
+	if (WeaponInterface == nullptr)
+	{
+		return;
+	}
+
+	WeaponInterface->Execute_EventTrigger(m_EquipWeapon, IsPress);
+	//EventShoot_Implementation();
+}
+
+void AFPSCharacter::ReqReload_Implementation()
+{
+	ResReload();
+}
+
+void AFPSCharacter::ResReload_Implementation()
+{
+	IWeaponInterface* InterfaceObj = Cast<IWeaponInterface>(m_EquipWeapon);
+	if (nullptr == InterfaceObj)
+		return;
+
+	InterfaceObj->Execute_EventReload(m_EquipWeapon);
+}
+
+void AFPSCharacter::ReqDrop_Implementation()
+{
+	if (false == IsValid(m_EquipWeapon))
+		return;
+
+	m_EquipWeapon->SetOwner(nullptr);
+	ResDrop();
+}
+
+void AFPSCharacter::ResDrop_Implementation()
+{
+	IWeaponInterface* InterfaceObj = Cast<IWeaponInterface>(m_EquipWeapon);
+	if (nullptr == InterfaceObj)
+		return;
+
+	InterfaceObj->Execute_EventDrop(m_EquipWeapon, this);
+	m_EquipWeapon = nullptr;
+}

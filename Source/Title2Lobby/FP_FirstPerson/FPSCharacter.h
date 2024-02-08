@@ -35,6 +35,18 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = Input)
 	UInputAction* FireInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PickUpAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* DropAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* StoreOpenAction;
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
@@ -42,12 +54,24 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	//virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void GetDamage(float Damage);
+
 protected:
 	// 키입력 함수
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void StartFire(const FInputActionValue& Value);
 	void StopFire(const FInputActionValue& Value);
+	/// 추가 /// 
+	void PickUp(const FInputActionValue& Value);
+	void Reload(const FInputActionValue& Value);
+	void Drop(const FInputActionValue& Value);
+	void StoreOpen(const FInputActionValue& Value);
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -63,8 +87,54 @@ public:
 	void ServerFire();
 	bool ServerFire_Validate();
 	void ServerFire_Implementation();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void EquipWeapon(TSubclassOf<class AWeaponBase> WeaponClass);
+
+	UFUNCTION()
+	void WeaponSetOwner();
+
+	UFUNCTION()
+	void StoreUIOpen();
+
+	AActor* FindNearestWeapon();
+
+	UPROPERTY(BlueprintReadWrite)
+	AActor* m_EquipWeapon;
+
+	FTimerHandle WeaponSetOwnerTimer;
+public:
+	//네트워크 코드 영역
+	UFUNCTION(Server, Reliable)
+	void ReqPickUp();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResPickUp(AActor* PickUpActor);
+
+	UFUNCTION(Client, Reliable)
+	void ResPressFClient();
+
+	UFUNCTION(Server, Reliable)
+	void ReqTrigger(bool IsPress);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResTrigger(bool IsPress);
+
+	UFUNCTION(Server, Reliable)
+	void ReqReload();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResReload();
+
+	UFUNCTION(Server, Reliable)
+	void ReqDrop();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void ResDrop();
+
 protected:
 	// 완성본에서는 weapon에서 실행
 	// 실제 라인 트레이스를 수행하는 함수
-	void PerformLineTrace();
+	
 };

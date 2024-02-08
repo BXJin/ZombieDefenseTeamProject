@@ -1,2 +1,1 @@
-Master Branch 나중에 합칠곳
-0206. Title2Lobby에 Character Merge
+02.08까지의 Backup파일 업데이트
