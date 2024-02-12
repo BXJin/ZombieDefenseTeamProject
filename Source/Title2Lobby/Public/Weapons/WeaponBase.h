@@ -134,4 +134,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, ReplicatedUsing = OnRep_Ammo)
 	int m_Ammo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int m_MaxAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int WeaponPrice;
 };

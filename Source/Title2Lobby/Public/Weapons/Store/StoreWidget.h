@@ -17,20 +17,55 @@ class TITLE2LOBBY_API UStoreWidget : public UUserWidget
 public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	class UButton* BuyButton;
+	class UTextBlock* BuyButtonText;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	class UTextBlock* BuyButtonText;
+	class USoundBase* BuySound;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	class USoundBase* FailedSound;
 
 public:
 
 	virtual void NativeConstruct() override;
 
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+	void BuyButton_Pistol();
+
+	UFUNCTION(BlueprintCallable, Client, Reliable)
+	void BuyButton_Pistol_Client();
+
+	bool BuyButton_Pistol_Validate() { return true; }
+
 	UFUNCTION(BlueprintCallable)
-	void OnBuyButtonClicked();
+	void BuyButton_Thompson();
+
+	UFUNCTION(BlueprintCallable)
+	void BuyButton_AK47();
+
+	UFUNCTION(BlueprintCallable)
+	void BuyButton_M4();
+
 
 public:
 	// 소환될 무기 클래스
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TSubclassOf<class AWeaponBase> WeaponClass;
+	TSubclassOf<class AWeaponBase> PistolClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class AWeaponBase> ThompsonClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class AWeaponBase> AK47Class;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class AWeaponBase> M4Class;
+public:
+	//// 아이템클래스
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	//TSubclassOf<class AItemBase> MedClass;
+	//
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	//TSubclassOf<class AItemBase> AmmoClass;
+
 };

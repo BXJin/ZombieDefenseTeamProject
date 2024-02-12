@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Items/ItemInterface.h"
 #include "GameFramework/Character.h"
 #include "FPSCharacter.generated.h"
 
@@ -12,7 +13,7 @@ class UInputAction;
 struct FInputActionValue;
 
 UCLASS()
-class TITLE2LOBBY_API AFPSCharacter : public ACharacter
+class TITLE2LOBBY_API AFPSCharacter : public ACharacter, public IItemInterface
 {
 	GENERATED_BODY()
 protected:
@@ -95,8 +96,12 @@ public:
 	UFUNCTION()
 	void WeaponSetOwner();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void StoreUIOpen();
+
+	UFUNCTION(BlueprintCallable)
+	void StoreUIClose();
+
 
 	AActor* FindNearestWeapon();
 
@@ -104,6 +109,9 @@ public:
 	AActor* m_EquipWeapon;
 
 	FTimerHandle WeaponSetOwnerTimer;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool IsStoreOpen = false;
 public:
 	//네트워크 코드 영역
 	UFUNCTION(Server, Reliable)
@@ -133,8 +141,12 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void ResDrop();
 
-protected:
-	// 완성본에서는 weapon에서 실행
-	// 실제 라인 트레이스를 수행하는 함수
+public:
+	//ItemInterface
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void EventGetItem(EItemType itemType);
+
+	void EventGetItem_Implementation(EItemType itemType) override;
+
 	
 };

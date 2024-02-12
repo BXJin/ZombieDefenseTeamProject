@@ -13,6 +13,7 @@ class ACharacter;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDele_UpdateHp, float, CurHp, float, MaxHp);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDele_UpdateAmmo, int, Ammo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDele_UpdateGold, int, Gold);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDele_UpdateMag, int, Mag);
 UCLASS()
 class TITLE2LOBBY_API AFPSPlayerState : public APlayerState
 {
@@ -35,6 +36,15 @@ public:
 
 	UFUNCTION()
 	void UseAmmo(int32 _Ammo);
+
+	UFUNCTION()
+	void SetMag(int32 M_Mag);
+
+	UFUNCTION()
+	void AddMag();
+
+	UFUNCTION()
+	void UseMag();
 	
 	UFUNCTION(BlueprintCallable)
 	void SetGold(int32 _Gold);
@@ -49,6 +59,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_Gold();
+
+	UFUNCTION()
+	void OnRep_Mag();
 public:
 	UPROPERTY(ReplicatedUsing = OnRep_CurHp)
 	float m_CurHp;
@@ -67,6 +80,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
 	FDele_UpdateGold m_Dele_UpdateGold;
+
+	UPROPERTY(ReplicatedUsing = OnRep_Mag)
+	float m_Mag;
+
+	UPROPERTY(BlueprintAssignable, VisibleAnywhere, BlueprintCallable)
+	FDele_UpdateMag m_Dele_UpdateMag;
 
 	UPROPERTY(BlueprintReadWrite)
 	ACharacter* m_pOwnChar;

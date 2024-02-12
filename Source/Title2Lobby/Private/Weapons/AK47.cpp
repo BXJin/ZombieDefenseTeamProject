@@ -8,6 +8,7 @@ AAK47::AAK47()
 {
 	KindOfWeapon = EWeaponType::AK47;
 	m_Ammo = 30;
+	WeaponPrice = 1500;
 }
 
 void AAK47::EventTrigger_Implementation(bool IsPress)
@@ -16,7 +17,7 @@ void AAK47::EventTrigger_Implementation(bool IsPress)
 	{
 		LoopShootMontage();
 		FTimerManager& timerManager = GetWorld()->GetTimerManager();
-		timerManager.SetTimer(th_loopShoot, this, &AAK47::LoopShootMontage, 0.09f, true);
+		timerManager.SetTimer(th_loopShoot, this, &AAK47::LoopShootMontage, 0.1f, true);
 	}
 	else
 	{

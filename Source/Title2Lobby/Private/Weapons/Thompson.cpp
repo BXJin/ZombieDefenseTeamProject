@@ -8,6 +8,7 @@ AThompson::AThompson()
 {
 	KindOfWeapon = EWeaponType::Thompson;
 	m_Ammo = 30;
+	WeaponPrice = 1000;
 }
 
 void AThompson::EventTrigger_Implementation(bool IsPress)
@@ -16,7 +17,7 @@ void AThompson::EventTrigger_Implementation(bool IsPress)
 	{
 		LoopShootMontage();
 		FTimerManager& timerManager = GetWorld()->GetTimerManager();
-		timerManager.SetTimer(th_loopShoot, this, &AThompson::LoopShootMontage, 0.1f, true);
+		timerManager.SetTimer(th_loopShoot, this, &AThompson::LoopShootMontage, 0.09f, true);
 	}
 	else
 	{

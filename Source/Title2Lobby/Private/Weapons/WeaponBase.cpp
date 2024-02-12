@@ -91,7 +91,14 @@ void AWeaponBase::EventShoot_Implementation()
 
 void AWeaponBase::EventReload_Implementation()
 {
+	if (m_Ammo == 30)
+	{
+		return;
+	}
 	m_pOwnChar->PlayAnimMontage(ReloadMontage);
+
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), WeaponReloadSoundBase,
+	WeaponMesh->GetSocketLocation("Muzzle"));
 }
 
 void AWeaponBase::EventPickUp_Implementation(ACharacter* pOwnChar)
@@ -107,6 +114,7 @@ void AWeaponBase::EventPickUp_Implementation(ACharacter* pOwnChar)
 
 void AWeaponBase::EventResetAmmo_Implementation()
 {
+
 	if (KindOfWeapon == EWeaponType::Beretta)
 	{
 		SetAmmo(15);
@@ -123,7 +131,14 @@ void AWeaponBase::EventDrop_Implementation(ACharacter* PlayerOwnChar)
 	WeaponMesh->SetSimulatePhysics(true);
 	//m_pOwnChar->bUseControllerRotationYaw = false;
 	// ���� ������ ����������
-	WeaponMesh->AddImpulse(PlayerOwnChar->GetActorForwardVector() * 500.0f);
+	if (KindOfWeapon == EWeaponType::Beretta)
+	{
+		WeaponMesh->AddImpulse(PlayerOwnChar->GetActorForwardVector() * 500.0f);
+	}
+	else
+	{
+		WeaponMesh->AddImpulse(PlayerOwnChar->GetActorForwardVector() * 2000.0f);
+	}
 
 	m_pOwnChar = nullptr;
 }

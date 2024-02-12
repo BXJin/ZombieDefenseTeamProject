@@ -133,7 +133,10 @@ void AFPSCharacter::Drop(const FInputActionValue& Value)
 
 void AFPSCharacter::StoreOpen(const FInputActionValue& Value)
 {
-	StoreUIOpen();
+	//if (!IsStoreOpen)
+	//{
+	//	StoreUIToggle();	
+	//}
 }
 
 // Called every frame
@@ -230,21 +233,45 @@ void AFPSCharacter::WeaponSetOwner()
 
 void AFPSCharacter::StoreUIOpen()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIOpen"));
-
 	APlayerController* PC = Cast<APlayerController>(GetController());
-
-	/// HUD에게 숨겨진 StoreUi를 hidden을 visible로 바꾸라고 요청
-	AFPSHUD* pHUD = Cast<AFPSHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	if (nullptr == pHUD)
+	if (!PC)
 		return;
-	else
+
+	AFPSHUD* pHUD = Cast<AFPSHUD>(PC->GetHUD());
+	if (!pHUD)
+		return;
+
+	if (!IsStoreOpen)
 	{
+		IsStoreOpen = true;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIOpen"));
 		pHUD->StoreWidget->SetVisibility(ESlateVisibility::Visible);
 		PC->SetShowMouseCursor(true);
-		PC->SetInputMode(FInputModeUIOnly());
+		PC->SetInputMode(FInputModeGameAndUI());
+	}
+
+}
+
+void AFPSCharacter::StoreUIClose()
+{
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (!PC)
+		return;
+
+	AFPSHUD* pHUD = Cast<AFPSHUD>(PC->GetHUD());
+	if (!pHUD)
+		return;
+
+	if (IsStoreOpen)
+	{
+		IsStoreOpen = false;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIClosed"));
+		pHUD->StoreWidget->SetVisibility(ESlateVisibility::Hidden);
+		PC->SetShowMouseCursor(false);
+		PC->SetInputMode(FInputModeGameOnly());
 	}
 }
+
 
 AActor* AFPSCharacter::FindNearestWeapon()
 {
@@ -335,11 +362,18 @@ void AFPSCharacter::ReqReload_Implementation()
 
 void AFPSCharacter::ResReload_Implementation()
 {
+	AFPSPlayerState* pPS = Cast<AFPSPlayerState>(GetPlayerState());
+	if (pPS == nullptr)
+		return;
+	if (pPS->m_Mag <= 0)
+		return;
+
 	IWeaponInterface* InterfaceObj = Cast<IWeaponInterface>(m_EquipWeapon);
 	if (nullptr == InterfaceObj)
 		return;
 
 	InterfaceObj->Execute_EventReload(m_EquipWeapon);
+	pPS->UseMag();
 }
 
 void AFPSCharacter::ReqDrop_Implementation()
@@ -359,4 +393,36 @@ void AFPSCharacter::ResDrop_Implementation()
 
 	InterfaceObj->Execute_EventDrop(m_EquipWeapon, this);
 	m_EquipWeapon = nullptr;
+}
+
+void AFPSCharacter::EventGetItem_Implementation(EItemType itemType)
+{
+	switch (itemType)
+	{
+	case EItemType::IT_MAG:
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("EventGetItem Mag"));
+
+		AFPSPlayerState* pPS = Cast<AFPSPlayerState>(GetPlayerState());
+		if (IsValid(pPS))
+		{
+			pPS->AddMag();
+		}
+	}
+	break;
+
+	case EItemType::IT_HEAL:
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("EventGetItem Heal"));
+		AFPSPlayerState* pPS = Cast<AFPSPlayerState>(GetPlayerState());
+		if (IsValid(pPS))
+		{
+			pPS->AddHeal(20);
+		}
+	}
+	break;
+
+	default:
+		break;
+	}
 }
