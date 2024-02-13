@@ -169,11 +169,11 @@ void ACodeLobbyGameMode::LaunchTheGame()
 	{
 	case 0:
 		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(), 
-			FString::Printf(TEXT("servertravel/Game/Maps/Arena01")), GetWorld()->GetFirstPlayerController());
+			FString::Printf(TEXT("servertravel/Game/Maps/Map01")), GetWorld()->GetFirstPlayerController());
 		break;
 	case 1:
 		UKismetSystemLibrary::ExecuteConsoleCommand(GetWorld(),
-			FString::Printf(TEXT("servertravel/Game/Maps/Arena02")), GetWorld()->GetFirstPlayerController());
+			FString::Printf(TEXT("servertravel/Game/Maps/Map02")), GetWorld()->GetFirstPlayerController());
 		break;
 	}
 }
