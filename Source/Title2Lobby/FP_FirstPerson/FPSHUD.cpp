@@ -42,6 +42,9 @@ void AFPSHUD::BindMyPlayerState()
 			ps->m_Dele_UpdateGold.AddDynamic(this, &AFPSHUD::OnUpdateMyGold);
 			OnUpdateMyGold(ps->m_Gold);
 			
+			ps->m_Dele_UpdateMag.AddDynamic(this, &AFPSHUD::OnUpdateMyMag);
+			OnUpdateMyMag(ps->m_Mag);
+
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("AShootingHUD Bind Success!"));
 			return;
 		}
@@ -60,5 +63,9 @@ void AFPSHUD::OnUpdateMyAmmo_Implementation(int Ammo)
 }
 
 void AFPSHUD::OnUpdateMyGold_Implementation(int Gold)
+{
+}
+
+void AFPSHUD::OnUpdateMyMag_Implementation(int Mag)
 {
 }

@@ -12,7 +12,7 @@ void AFPSPlayerState::BeginPlay()
 {
 	Super::BeginPlay();
 	OnRep_CurHp();
-	m_Gold = 500;
+	m_Gold = 1500;
 }
 
 AFPSPlayerState::AFPSPlayerState() : m_CurHp(80)

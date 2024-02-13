@@ -9,6 +9,7 @@ AThompson::AThompson()
 	KindOfWeapon = EWeaponType::Thompson;
 	m_Ammo = 30;
 	WeaponPrice = 1000;
+	
 }
 
 void AThompson::EventTrigger_Implementation(bool IsPress)

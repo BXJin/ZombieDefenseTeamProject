@@ -21,7 +21,6 @@ AWeaponBase::AWeaponBase() :m_Ammo(30)
 	WeaponMesh->SetCollisionProfileName("Weapon");
 	WeaponMesh->SetSimulatePhysics(true);
 	SetRootComponent(WeaponMesh);
-
 	bReplicates = true;
 	SetReplicateMovement(true);
 }
@@ -231,7 +230,10 @@ void AWeaponBase::ReqShoot_Implementation(FVector vStart, FVector vEnd)
 
 	ACharacter* pHitChar = Cast<ACharacter>(result.GetActor());
 	if (false == IsValid(pHitChar))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Nohit")));
 		return;
+	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HitChar = %s"), *pHitChar->GetName()));
 

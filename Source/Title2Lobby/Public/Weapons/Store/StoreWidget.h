@@ -29,13 +29,8 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+	UFUNCTION(BlueprintCallable)
 	void BuyButton_Pistol();
-
-	UFUNCTION(BlueprintCallable, Client, Reliable)
-	void BuyButton_Pistol_Client();
-
-	bool BuyButton_Pistol_Validate() { return true; }
 
 	UFUNCTION(BlueprintCallable)
 	void BuyButton_Thompson();
