@@ -11,7 +11,8 @@ class UStaticMeshComponent;
 class UBoxComponent;
 class USphereComponent;
 class ACharacter;
-class UParticleSystem;
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
@@ -105,8 +106,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UAnimMontage* ReloadMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UParticleSystem* WeaponFireEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UNiagaraComponent* WeaponMuzzleFlashComp;
+	// √—±∏ »≠ø∞ niagara
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UNiagaraSystem* MuzzleFire;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USoundBase* WeaponSoundBase;
@@ -128,6 +132,15 @@ public:
 
 	FTimerHandle TimerHandle_ShotDelay;
 	float ShotDelay = 0.1f; // πﬂªÁ ∞£∞› (√ )
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ReloadDelay = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsReloading = false;
+
+	//¿Á¿Â¿¸ µÙ∑π¿Ã
+	FTimerHandle TimerHandle_ReloadDelay;
 
 	UFUNCTION()
 	void OnRep_Ammo();

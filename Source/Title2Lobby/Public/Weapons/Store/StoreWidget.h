@@ -41,6 +41,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void BuyButton_M4();
 
+	UFUNCTION(BlueprintCallable)
+	void BuyButton_Med();
+
+	UFUNCTION(BlueprintCallable)
+	void BuyButton_Ammo();
 
 public:
 	// 소환될 무기 클래스
@@ -56,11 +61,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<class AWeaponBase> M4Class;
 public:
-	//// 아이템클래스
-	//UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	//TSubclassOf<class AItemBase> MedClass;
-	//
-	//UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	//TSubclassOf<class AItemBase> AmmoClass;
+	// 아이템클래스
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class AItemBase> MedClass;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class AItemBase> AmmoClass;
 
 };

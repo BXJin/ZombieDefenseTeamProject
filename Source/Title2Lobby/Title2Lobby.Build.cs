@@ -9,7 +9,7 @@ public class Title2Lobby : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", 
-            "UMG", "OnlineSubsystem", "OnlineSubsystemUtils", "AdvancedSessions" });
+            "UMG", "OnlineSubsystem", "OnlineSubsystemUtils", "AdvancedSessions","Niagara" });
 
 
         PrivateDependencyModuleNames.AddRange(new string[] {  });

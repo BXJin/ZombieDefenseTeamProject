@@ -2,6 +2,10 @@
 
 
 #include "Items/ItemBase.h"
+#include "Components/StaticMeshComponent.h"
+#include "NiagaraComponent.h"
+#include "Components/SceneComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AItemBase::AItemBase()
@@ -15,6 +19,14 @@ AItemBase::AItemBase()
 	SetRootComponent(SceneComp);
 	ItemStaticMesh->SetupAttachment(RootComponent);
 	ItemStaticMesh->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+
+	ItemNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("N_ItemVFX");
+	ItemNiagaraComponent->SetupAttachment(ItemStaticMesh);
+	ItemNiagaraComponent->bAutoActivate = true;
+
+	UsingItemNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>("N_UsingItemVFX");
+	UsingItemNiagaraComponent->SetupAttachment(ItemStaticMesh);
+	UsingItemNiagaraComponent->bAutoActivate = false;
 
 	bReplicates = true;
 	SetReplicateMovement(true);
@@ -44,6 +56,8 @@ void AItemBase::OnItemBeginOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	if (ItemInterface)
 	{
 		ItemInterface->Execute_EventGetItem(OtherActor, EnumItemType);
+		// 나이아가라 스폰
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), UsingItemVFX, ItemStaticMesh->GetComponentLocation());
 		Destroy();
 	}
 }

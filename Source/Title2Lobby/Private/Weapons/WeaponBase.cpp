@@ -10,6 +10,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 // Sets default values
 AWeaponBase::AWeaponBase() :m_Ammo(30)
@@ -21,6 +23,10 @@ AWeaponBase::AWeaponBase() :m_Ammo(30)
 	WeaponMesh->SetCollisionProfileName("Weapon");
 	WeaponMesh->SetSimulatePhysics(true);
 	SetRootComponent(WeaponMesh);
+
+	WeaponMuzzleFlashComp = CreateDefaultSubobject<UNiagaraComponent>("N_MuzzleFlash");
+	WeaponMuzzleFlashComp->SetupAttachment(WeaponMesh, "Muzzle");
+	WeaponMuzzleFlashComp->bAutoActivate = false;
 	bReplicates = true;
 	SetReplicateMovement(true);
 }
@@ -67,10 +73,10 @@ void AWeaponBase::EventShoot_Implementation()
 		return;
 	}
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), WeaponFireEffect,
-		WeaponMesh->GetSocketLocation("Muzzle"),
-		WeaponMesh->GetSocketRotation("Muzzle"),
-		FVector(0.1f, 0.1f, 0.1f));
+	// 총구화염 나이아가라
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), MuzzleFire, WeaponMesh->GetSocketLocation("Muzzle"));
+
+	WeaponMuzzleFlashComp->Deactivate();
 
 	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), WeaponSoundBase,
 		WeaponMesh->GetSocketLocation("Muzzle"));
@@ -90,14 +96,15 @@ void AWeaponBase::EventShoot_Implementation()
 
 void AWeaponBase::EventReload_Implementation()
 {
+	// Activate reload delay
 	if (m_Ammo == 30)
 	{
 		return;
 	}
 	m_pOwnChar->PlayAnimMontage(ReloadMontage);
+	GetWorldTimerManager().SetTimer(TimerHandle_ReloadDelay, this, &AWeaponBase::EventReload, 2.f, false);
 
-	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), WeaponReloadSoundBase,
-	WeaponMesh->GetSocketLocation("Muzzle"));
+	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), WeaponReloadSoundBase, WeaponMesh->GetSocketLocation("Muzzle"));
 }
 
 void AWeaponBase::EventPickUp_Implementation(ACharacter* pOwnChar)

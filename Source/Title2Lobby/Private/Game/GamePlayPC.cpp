@@ -26,7 +26,6 @@ void AGamePlayPC::ServerBuyPistol_Implementation()
 		ABeretta* PCPistol = GetWorld()->SpawnActor<ABeretta>(PistolClass, SpawnedLocation, SpawnedRotation);
 
 	}
-	//MulticastBuyWeapon();
 }
 
 void AGamePlayPC::ServerBuyThompson_Implementation()
@@ -108,6 +107,22 @@ void AGamePlayPC::ServerBuyMedItem_Implementation()
 
 		// pCharacter의 회전 값을 가져옵니다.
 		FRotator SpawnedRotation = pCharacter->GetActorRotation();
+
+		//AItemBase* PCMedItem = GetWorld()->SpawnActor<AItemBase>(MedItemClass, SpawnedLocation, SpawnedRotation);
+
+		// 만약 앞에 스폰된 아이템이 있다면 옆에서 스폰
+
+		FVector CheckLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector() * 200; // Change the distance as needed
+		FHitResult HitResult;
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(pCharacter); // Ignore the character itself
+
+		bool bHasHit = GetWorld()->LineTraceSingleByChannel(HitResult, CheckLocation, CheckLocation + (pCharacter->GetActorForwardVector() * 100), ECC_WorldDynamic, Params);
+
+		if (bHasHit)
+		{
+			SpawnedLocation = HitResult.ImpactPoint + (HitResult.ImpactNormal * 250); // Adjust the spawn location next to the hit item
+		}
 
 		AItemBase* PCMedItem = GetWorld()->SpawnActor<AItemBase>(MedItemClass, SpawnedLocation, SpawnedRotation);
 

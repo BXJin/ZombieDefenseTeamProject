@@ -7,6 +7,10 @@
 #include "ItemInterface.h"
 #include "ItemBase.generated.h"
 
+class UParticleSystemComponent;
+class UNiagaraComponent;
+class UNiagaraSystem;
+
 UCLASS()
 class TITLE2LOBBY_API AItemBase : public AActor, public IItemInterface
 {
@@ -33,9 +37,28 @@ public:
 	UStaticMeshComponent* ItemStaticMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UNiagaraComponent* ItemNiagaraComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UNiagaraSystem* ItemNiagaraVFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UNiagaraComponent* UsingItemNiagaraComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UNiagaraSystem* UsingItemVFX;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* SceneComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EItemType EnumItemType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 AmmoItemPrice = 150;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MedItemPrice = 150;
+
 
 };

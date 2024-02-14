@@ -23,6 +23,8 @@ AFPSCharacter::AFPSCharacter()
 	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	FirstPersonCamera->bUsePawnControlRotation = true;
 	FirstPersonCamera->SetupAttachment(GetMesh(), FName("head"));
+
+
 }
 
 // Called when the game starts or when spawned

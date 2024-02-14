@@ -11,6 +11,8 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class TITLE2LOBBY_API AFPSCharacter : public ACharacter, public IItemInterface
@@ -108,10 +110,15 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	AActor* m_EquipWeapon;
 
+	UPROPERTY(BlueprintReadWrite)
+	AWeaponBase* m_WeaponBase;
+
 	FTimerHandle WeaponSetOwnerTimer;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool IsStoreOpen = false;
+
+
 public:
 	//네트워크 코드 영역
 	UFUNCTION(Server, Reliable)
