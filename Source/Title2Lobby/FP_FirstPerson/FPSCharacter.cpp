@@ -365,9 +365,15 @@ void AFPSCharacter::ReqReload_Implementation()
 void AFPSCharacter::ResReload_Implementation()
 {
 	AFPSPlayerState* pPS = Cast<AFPSPlayerState>(GetPlayerState());
-	if (pPS == nullptr)
+	m_WeaponBase = Cast<AWeaponBase>(m_EquipWeapon);
+	if (m_WeaponBase == nullptr)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Weapon is nullptr"));
 		return;
-	if (pPS->m_Mag <= 0)
+	}
+	if (m_WeaponBase->m_Ammo == 30)
+		return;
+	if (pPS == nullptr || pPS->m_Mag <= 0)
 		return;
 
 	IWeaponInterface* InterfaceObj = Cast<IWeaponInterface>(m_EquipWeapon);
