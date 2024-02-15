@@ -16,14 +16,18 @@ class TITLE2LOBBY_API UStoreWidget : public UUserWidget
 	
 public:
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	class UTextBlock* BuyButtonText;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInfo", meta = (BindWidget))
+	class UTextBlock* GoldLackText;
+
+	UPROPERTY(EditAnywhere, Category = "TextAnim", meta = (BindWidgetAnim), Transient)
+	class UWidgetAnimation* FailedTextAnim;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	class USoundBase* BuySound;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	class USoundBase* FailedSound;
+
 
 public:
 

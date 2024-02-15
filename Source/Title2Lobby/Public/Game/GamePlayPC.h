@@ -44,8 +44,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<class AWeaponBase> AK47Class;
 
-	//UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	//TSubclassOf<class AWeaponBase> ThompsonClass;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class AWeaponBase> M4Class;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<class AItemBase> MagClass;

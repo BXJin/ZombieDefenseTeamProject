@@ -114,7 +114,9 @@ void AFPSCharacter::StopFire(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("StopFire"));
 	AWeaponBase* pWeapon = Cast<AWeaponBase>(m_EquipWeapon);
 	if (IsValid(pWeapon) && pWeapon->m_Ammo <= 0)
+	{
 		return;
+	}
 	ReqTrigger(false);
 }
 
@@ -125,6 +127,8 @@ void AFPSCharacter::PickUp(const FInputActionValue& Value)
 
 void AFPSCharacter::Reload(const FInputActionValue& Value)
 {
+	// 재장전 타이머 작동
+
 	ReqReload();
 }
 
@@ -175,7 +179,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	EnhancedPlayerInputComponent->BindAction(FireInputAction, ETriggerEvent::Started, this, &AFPSCharacter::StartFire);
 	EnhancedPlayerInputComponent->BindAction(FireInputAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopFire);
 	EnhancedPlayerInputComponent->BindAction(PickUpAction, ETriggerEvent::Triggered, this, &AFPSCharacter::PickUp);
-	EnhancedPlayerInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Reload);
+	EnhancedPlayerInputComponent->BindAction(ReloadAction, ETriggerEvent::Completed, this, &AFPSCharacter::Reload);
 	EnhancedPlayerInputComponent->BindAction(DropAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Drop);
 	EnhancedPlayerInputComponent->BindAction(StoreOpenAction, ETriggerEvent::Triggered, this, &AFPSCharacter::StoreOpen);
 }
@@ -347,6 +351,7 @@ void AFPSCharacter::ReqTrigger_Implementation(bool IsPress)
 
 void AFPSCharacter::ResTrigger_Implementation(bool IsPress)
 {
+
 	IWeaponInterface* WeaponInterface = Cast<IWeaponInterface>(m_EquipWeapon);
 	if (WeaponInterface == nullptr)
 	{

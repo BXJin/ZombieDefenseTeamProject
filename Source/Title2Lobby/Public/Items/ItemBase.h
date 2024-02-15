@@ -55,7 +55,7 @@ public:
 	EItemType EnumItemType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 AmmoItemPrice = 150;
+	int32 AmmoItemPrice = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MedItemPrice = 150;

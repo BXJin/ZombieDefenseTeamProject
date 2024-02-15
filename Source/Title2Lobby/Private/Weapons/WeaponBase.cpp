@@ -104,7 +104,7 @@ void AWeaponBase::EventReload_Implementation()
 	m_pOwnChar->PlayAnimMontage(ReloadMontage);
 
 	UGameplayStatics::SpawnSoundAtLocation(GetWorld(), WeaponReloadSoundBase, WeaponMesh->GetSocketLocation("Muzzle"));
-	GetWorldTimerManager().SetTimer(TimerHandle_ReloadDelay, this, &AWeaponBase::EventReload, 2.f, false);
+	//GetWorldTimerManager().SetTimer(TimerHandle_ReloadDelay, this, &AWeaponBase::EventReload, 2.f, false);
 }
 
 void AWeaponBase::EventPickUp_Implementation(ACharacter* pOwnChar)

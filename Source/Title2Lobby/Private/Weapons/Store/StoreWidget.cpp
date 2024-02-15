@@ -8,6 +8,7 @@
 #include "Weapons/Beretta.h"
 #include "Weapons/Thompson.h"
 #include "Weapons/AK47.h"
+#include "Weapons/M4.h"
 #include "Items/ItemBase.h"
 #include "FP_FirstPerson/FPSCharacter.h"
 #include "FP_FirstPerson/FPSPlayerState.h"
@@ -18,6 +19,8 @@
 void UStoreWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	GoldLackText = Cast<UTextBlock>(GetWidgetFromName(TEXT("GoldLackText")));
+	GoldLackText->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UStoreWidget::BuyButton_Pistol()
@@ -26,14 +29,14 @@ void UStoreWidget::BuyButton_Pistol()
 	AFPSCharacter* Player = Cast<AFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetOwningPlayer()->GetWorld(), 0));
 	AFPSPlayerState* PlayerState = Cast<AFPSPlayerState>(Player->GetPlayerState());
 	AFPSHUD* HUD = Cast<AFPSHUD>(GetOwningPlayer()->GetWorld()->GetFirstPlayerController()->GetHUD());
+	UStoreWidget* StoreWidget = Cast<UStoreWidget>(HUD->StoreWidget);
 
 	// WeaponBase의 WeaponPrice를 가져와서 PlayerState의 Gold와 비교
 	if (PlayerState->m_Gold < Pistol->WeaponPrice)
 	{
-		// 구매 실패 메세지와 사운드 출력
-		//HUD->ShowMessage("Not enough gold", 2.0f);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Not enough gold"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), FailedSound);
+		GoldLackText->SetVisibility(ESlateVisibility::Visible);
+		PlayAnimation(FailedTextAnim);
 	}
 	else
 	{
@@ -65,10 +68,9 @@ void UStoreWidget::BuyButton_Thompson()
 	// WeaponBase의 WeaponPrice를 가져와서 PlayerState의 Gold와 비교
 	if (PlayerState->m_Gold < Thompson->WeaponPrice)
 	{
-		// 구매 실패 메세지와 사운드 출력
-		//HUD->ShowMessage("Not enough gold", 2.0f);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Not enough gold"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), FailedSound);
+		GoldLackText->SetVisibility(ESlateVisibility::Visible);
+		PlayAnimation(FailedTextAnim);
 	}
 	else
 	{
@@ -100,10 +102,9 @@ void UStoreWidget::BuyButton_AK47()
 	// WeaponBase의 WeaponPrice를 가져와서 PlayerState의 Gold와 비교
 	if (PlayerState->m_Gold < AK47->WeaponPrice)
 	{
-		// 구매 실패 메세지와 사운드 출력
-		//HUD->ShowMessage("Not enough gold", 2.0f);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Not enough gold"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), FailedSound);
+		GoldLackText->SetVisibility(ESlateVisibility::Visible);
+		PlayAnimation(FailedTextAnim);
 	}
 	else
 	{
@@ -127,6 +128,36 @@ void UStoreWidget::BuyButton_AK47()
 
 void UStoreWidget::BuyButton_M4()
 {
+	AWeaponBase* M4 = NewObject<AWeaponBase>(GetOwningPlayer()->GetWorld(), AM4::StaticClass());
+	AFPSCharacter* Player = Cast<AFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetOwningPlayer()->GetWorld(), 0));
+	AFPSPlayerState* PlayerState = Cast<AFPSPlayerState>(Player->GetPlayerState());
+	AFPSHUD* HUD = Cast<AFPSHUD>(GetOwningPlayer()->GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	// WeaponBase의 WeaponPrice를 가져와서 PlayerState의 Gold와 비교
+	if (PlayerState->m_Gold < M4->WeaponPrice)
+	{
+		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), FailedSound);
+		GoldLackText->SetVisibility(ESlateVisibility::Visible);
+		PlayAnimation(FailedTextAnim);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
+		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), BuySound);
+
+		AGamePlayPC* PC = Cast<AGamePlayPC>(GetOwningPlayer());
+		if (PC)
+		{
+			PC->ServerBuyM4();
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
+		}
+
+		PlayerState->m_Gold -= M4->WeaponPrice;
+		PlayerState->OnRep_Gold();
+	}
 }
 
 void UStoreWidget::BuyButton_Med()
@@ -139,10 +170,9 @@ void UStoreWidget::BuyButton_Med()
 	// WeaponBase의 WeaponPrice를 가져와서 PlayerState의 Gold와 비교
 	if (PlayerState->m_Gold < Medipack->MedItemPrice)
 	{
-		// 구매 실패 메세지와 사운드 출력
-		//HUD->ShowMessage("Not enough gold", 2.0f);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Not enough gold"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), FailedSound);
+		GoldLackText->SetVisibility(ESlateVisibility::Visible);
+		PlayAnimation(FailedTextAnim);
 	}
 	else
 	{
@@ -172,12 +202,11 @@ void UStoreWidget::BuyButton_Ammo()
 	AFPSHUD* HUD = Cast<AFPSHUD>(GetOwningPlayer()->GetWorld()->GetFirstPlayerController()->GetHUD());
 
 	// WeaponBase의 WeaponPrice를 가져와서 PlayerState의 Gold와 비교
-	if (PlayerState->m_Gold < Ammopack->MedItemPrice)
+	if (PlayerState->m_Gold < Ammopack->AmmoItemPrice)
 	{
-		// 구매 실패 메세지와 사운드 출력
-		//HUD->ShowMessage("Not enough gold", 2.0f);
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Not enough gold"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), FailedSound);
+		GoldLackText->SetVisibility(ESlateVisibility::Visible);
+		PlayAnimation(FailedTextAnim);
 	}
 	else
 	{
@@ -194,7 +223,7 @@ void UStoreWidget::BuyButton_Ammo()
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
 		}
 
-		PlayerState->m_Gold -= Ammopack->MedItemPrice;
+		PlayerState->m_Gold -= Ammopack->AmmoItemPrice;
 		PlayerState->OnRep_Gold();
 	}
 }

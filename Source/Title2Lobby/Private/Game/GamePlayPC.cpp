@@ -6,6 +6,7 @@
 #include "Weapons/Beretta.h"
 #include "Weapons/Thompson.h"
 #include "Weapons/AK47.h"
+#include "Weapons/M4.h"
 #include "Items/ItemBase.h"
 #include "FP_FirstPerson/FPSCharacter.h"
 #include "FP_FirstPerson/FPSPlayerState.h"
@@ -64,19 +65,19 @@ void AGamePlayPC::ServerBuyAK47_Implementation()
 
 void AGamePlayPC::ServerBuyM4_Implementation()
 {
-	//AFPSCharacter* pCharacter = Cast<AFPSCharacter>(GetPawn());
-	//if (pCharacter)
-	//{
-	//	// 스폰시키기
-	//	// 스폰위치
-	//	FVector SpawnedLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector() * 100;
-	//
-	//	// pCharacter의 회전 값을 가져옵니다.
-	//	FRotator SpawnedRotation = pCharacter->GetActorRotation();
-	//
-	//	ABeretta* PCPistol = GetWorld()->SpawnActor<ABeretta>(PistolClass, SpawnedLocation, SpawnedRotation);
-	//
-	//}
+	AFPSCharacter* pCharacter = Cast<AFPSCharacter>(GetPawn());
+	if (pCharacter)
+	{
+		// 스폰시키기
+		// 스폰위치
+		FVector SpawnedLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector() * 100;
+	
+		// pCharacter의 회전 값을 가져옵니다.
+		FRotator SpawnedRotation = pCharacter->GetActorRotation();
+	
+		AM4* PCM4 = GetWorld()->SpawnActor<AM4>(M4Class, SpawnedLocation, SpawnedRotation);
+	
+	}
 }
 
 void AGamePlayPC::ServerBuyMag_Implementation()
@@ -86,7 +87,7 @@ void AGamePlayPC::ServerBuyMag_Implementation()
 	{
 		// 스폰시키기
 		// 스폰위치
-		FVector SpawnedLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector() * 100;
+		FVector SpawnedLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector();
 
 		// pCharacter의 회전 값을 가져옵니다.
 		FRotator SpawnedRotation = pCharacter->GetActorRotation();
@@ -103,26 +104,10 @@ void AGamePlayPC::ServerBuyMedItem_Implementation()
 	{
 		// 스폰시키기
 		// 스폰위치
-		FVector SpawnedLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector() * 100;
+		FVector SpawnedLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector();
 
 		// pCharacter의 회전 값을 가져옵니다.
 		FRotator SpawnedRotation = pCharacter->GetActorRotation();
-
-		//AItemBase* PCMedItem = GetWorld()->SpawnActor<AItemBase>(MedItemClass, SpawnedLocation, SpawnedRotation);
-
-		// 만약 앞에 스폰된 아이템이 있다면 옆에서 스폰
-
-		FVector CheckLocation = pCharacter->GetActorLocation() + pCharacter->GetActorForwardVector() * 200; // Change the distance as needed
-		FHitResult HitResult;
-		FCollisionQueryParams Params;
-		Params.AddIgnoredActor(pCharacter); // Ignore the character itself
-
-		bool bHasHit = GetWorld()->LineTraceSingleByChannel(HitResult, CheckLocation, CheckLocation + (pCharacter->GetActorForwardVector() * 100), ECC_WorldDynamic, Params);
-
-		if (bHasHit)
-		{
-			SpawnedLocation = HitResult.ImpactPoint + (HitResult.ImpactNormal * 250); // Adjust the spawn location next to the hit item
-		}
 
 		AItemBase* PCMedItem = GetWorld()->SpawnActor<AItemBase>(MedItemClass, SpawnedLocation, SpawnedRotation);
 
