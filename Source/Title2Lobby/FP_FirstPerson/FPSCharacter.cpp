@@ -57,12 +57,11 @@ void AFPSCharacter::BeginPlay()
 
 void AFPSCharacter::GetDamage(float Damage)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue,
-		FString::Printf(TEXT("TakeDamage DamageAmount")));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue,	FString::Printf(TEXT("TakeDamage DamageAmount")));
 	AFPSPlayerState* ps = Cast<AFPSPlayerState>(GetPlayerState());
 	if (false == IsValid(ps))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PS is not valid"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("PS is not valid"));
 		return;
 	}
 
@@ -250,7 +249,7 @@ void AFPSCharacter::StoreUIOpen()
 	if (!IsStoreOpen)
 	{
 		IsStoreOpen = true;
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIOpen"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIOpen"));
 		pHUD->StoreWidget->SetVisibility(ESlateVisibility::Visible);
 		PC->SetShowMouseCursor(true);
 		PC->SetInputMode(FInputModeGameAndUI());
@@ -271,7 +270,7 @@ void AFPSCharacter::StoreUIClose()
 	if (IsStoreOpen)
 	{
 		IsStoreOpen = false;
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIClosed"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("StoreUIClosed"));
 		pHUD->StoreWidget->SetVisibility(ESlateVisibility::Hidden);
 		PC->SetShowMouseCursor(false);
 		PC->SetInputMode(FInputModeGameOnly());
@@ -373,7 +372,7 @@ void AFPSCharacter::ResReload_Implementation()
 	m_WeaponBase = Cast<AWeaponBase>(m_EquipWeapon);
 	if (m_WeaponBase == nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Weapon is nullptr"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Weapon is nullptr"));
 		return;
 	}
 	if (m_WeaponBase->m_Ammo == 30)
@@ -414,7 +413,7 @@ void AFPSCharacter::EventGetItem_Implementation(EItemType itemType)
 	{
 	case EItemType::IT_MAG:
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("EventGetItem Mag"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("EventGetItem Mag"));
 
 		AFPSPlayerState* pPS = Cast<AFPSPlayerState>(GetPlayerState());
 		if (IsValid(pPS))
@@ -426,7 +425,7 @@ void AFPSCharacter::EventGetItem_Implementation(EItemType itemType)
 
 	case EItemType::IT_HEAL:
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("EventGetItem Heal"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("EventGetItem Heal"));
 		AFPSPlayerState* pPS = Cast<AFPSPlayerState>(GetPlayerState());
 		if (IsValid(pPS))
 		{

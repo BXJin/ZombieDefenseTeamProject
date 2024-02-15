@@ -44,7 +44,7 @@ void ACodeLobbyGameMode::PostLogin(APlayerController* NewPlayer)
 			LobbyPc->UpdateLobbySettings(g_MapImage,g_MapName,g_MapDifficulty);
 			//RespawnPlayer(LobbyPc);
 			LobbyPc->UpdateNumberOfPlayers(AllPlayerControllers.Num(), MaxPlayers);
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("RespawnPlayer"));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("RespawnPlayer"));
 		}
 	}
 }
@@ -68,7 +68,7 @@ void ACodeLobbyGameMode::Logout(AController* Exiting)
 			EveryOneUpdate();
 		}
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Logout"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Logout"));
 }
 
 

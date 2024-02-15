@@ -215,7 +215,7 @@ void AWeaponBase::ReqShoot_Implementation(FVector vStart, FVector vEnd)
 	if (false == UseAmmo())
 		return;
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("ReqShoot_Implementation"));
+	//->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("ReqShoot_Implementation"));
 
 	FHitResult result;
 	FCollisionObjectQueryParams collisionObjParams;
@@ -238,11 +238,11 @@ void AWeaponBase::ReqShoot_Implementation(FVector vStart, FVector vEnd)
 	ACharacter* pHitChar = Cast<ACharacter>(result.GetActor());
 	if (false == IsValid(pHitChar))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Nohit")));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("Nohit")));
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HitChar = %s"), *pHitChar->GetName()));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("HitChar = %s"), *pHitChar->GetName()));
 
 	UGameplayStatics::ApplyDamage(pHitChar, WeaponDamage, m_pOwnChar->GetController(), this, UDamageType::StaticClass());
 }

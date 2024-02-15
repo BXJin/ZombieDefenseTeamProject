@@ -92,7 +92,7 @@ void AFPSPlayerState::SetGold(int32 _Gold)
 // 다른 시스템과 공유
 void AFPSPlayerState::OnRep_CurHp()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_CurHp = %f"), m_CurHp));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_CurHp = %f"), m_CurHp));
 
 	if(m_Dele_UpdateHp.IsBound())
 		m_Dele_UpdateHp.Broadcast(m_CurHp, 100);
@@ -100,7 +100,7 @@ void AFPSPlayerState::OnRep_CurHp()
 
 void AFPSPlayerState::OnRep_Ammo()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_Ammo = %d"), m_Ammo));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_Ammo = %d"), m_Ammo));
 
 	if (m_Dele_UpdateAmmo.IsBound())
 		m_Dele_UpdateAmmo.Broadcast(m_Ammo);
@@ -108,7 +108,7 @@ void AFPSPlayerState::OnRep_Ammo()
 
 void AFPSPlayerState::OnRep_Gold()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_Gold = %d"), m_Gold));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_Gold = %d"), m_Gold));
 
 	if (m_Dele_UpdateGold.IsBound())
 		m_Dele_UpdateGold.Broadcast(m_Gold); // 이전에는 m_Dele_UpdateAmmo.Broadcast(m_Gold);
@@ -116,7 +116,7 @@ void AFPSPlayerState::OnRep_Gold()
 
 void AFPSPlayerState::OnRep_Mag()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_Mag = %d"), m_Mag));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, FString::Printf(TEXT("OnRep_Mag = %d"), m_Mag));
 	if (m_Dele_UpdateMag.IsBound())
 		m_Dele_UpdateMag.Broadcast(m_Mag);
 }

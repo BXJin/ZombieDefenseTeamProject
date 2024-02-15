@@ -24,14 +24,14 @@ void AFPSHUD::BeginPlay()
 void AFPSHUD::BindMyPlayerState()
 {
 	APlayerController* pc = GetWorld()->GetFirstPlayerController();
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("pc"));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("pc"));
 	if (IsValid(pc))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("IsValid(pc)"));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("IsValid(pc)"));
 		AFPSPlayerState* ps = Cast<AFPSPlayerState>(pc->PlayerState);
 		if (IsValid(ps))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("IsValid(ps)"));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("IsValid(ps)"));
 			ps->m_Dele_UpdateHp.AddDynamic(this, &AFPSHUD::OnUpdateMyHp);
 			OnUpdateMyHp(ps->m_CurHp, 100);
 
@@ -45,7 +45,7 @@ void AFPSHUD::BindMyPlayerState()
 			ps->m_Dele_UpdateMag.AddDynamic(this, &AFPSHUD::OnUpdateMyMag);
 			OnUpdateMyMag(ps->m_Mag);
 
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("AShootingHUD Bind Success!"));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("AShootingHUD Bind Success!"));
 			return;
 		}
 	}

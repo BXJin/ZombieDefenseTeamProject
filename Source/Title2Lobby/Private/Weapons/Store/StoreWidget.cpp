@@ -40,7 +40,7 @@ void UStoreWidget::BuyButton_Pistol()
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), BuySound);
 
 		AGamePlayPC* PC = Cast<AGamePlayPC>(GetOwningPlayer());
@@ -50,7 +50,7 @@ void UStoreWidget::BuyButton_Pistol()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
 		}
 
 		PlayerState->m_Gold -= Pistol->WeaponPrice;
@@ -74,7 +74,7 @@ void UStoreWidget::BuyButton_Thompson()
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), BuySound);
 
 		AGamePlayPC* PC = Cast<AGamePlayPC>(GetOwningPlayer());
@@ -84,7 +84,7 @@ void UStoreWidget::BuyButton_Thompson()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
 		}
 
 		PlayerState->m_Gold -= Thompson->WeaponPrice;
@@ -108,7 +108,7 @@ void UStoreWidget::BuyButton_AK47()
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), BuySound);
 
 		AGamePlayPC* PC = Cast<AGamePlayPC>(GetOwningPlayer());
@@ -118,7 +118,7 @@ void UStoreWidget::BuyButton_AK47()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
 		}
 
 		PlayerState->m_Gold -= AK47->WeaponPrice;
@@ -142,7 +142,7 @@ void UStoreWidget::BuyButton_M4()
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), BuySound);
 
 		AGamePlayPC* PC = Cast<AGamePlayPC>(GetOwningPlayer());
@@ -152,7 +152,7 @@ void UStoreWidget::BuyButton_M4()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
 		}
 
 		PlayerState->m_Gold -= M4->WeaponPrice;
@@ -176,7 +176,7 @@ void UStoreWidget::BuyButton_Med()
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), BuySound);
 
 		AGamePlayPC* PC = Cast<AGamePlayPC>(GetOwningPlayer());
@@ -186,7 +186,7 @@ void UStoreWidget::BuyButton_Med()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
 		}
 
 		PlayerState->m_Gold -= Medipack->MedItemPrice;
@@ -210,7 +210,7 @@ void UStoreWidget::BuyButton_Ammo()
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
+		//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Buy"));
 		UGameplayStatics::PlaySound2D(GetOwningPlayer()->GetWorld(), BuySound);
 
 		AGamePlayPC* PC = Cast<AGamePlayPC>(GetOwningPlayer());
@@ -220,7 +220,7 @@ void UStoreWidget::BuyButton_Ammo()
 		}
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
+			//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("PC is not valid"));
 		}
 
 		PlayerState->m_Gold -= Ammopack->AmmoItemPrice;
