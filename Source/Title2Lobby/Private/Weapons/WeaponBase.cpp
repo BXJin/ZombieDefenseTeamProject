@@ -230,7 +230,7 @@ void AWeaponBase::ReqShoot_Implementation(FVector vStart, FVector vEnd)
 	collisionParams.AddIgnoredActor(m_pOwnChar);
 
 	bool isHit = GetWorld()->LineTraceSingleByObjectType(result, vStart, vEnd, collisionObjParams, collisionParams);
-	DrawDebugLine(GetWorld(), vStart, vEnd, FColor::Red, false, 5.0f);
+	DrawDebugLine(GetWorld(), vStart, vEnd, FColor::Red, false, 1.0f);
 
 	if (false == isHit)
 		return;

@@ -135,8 +135,10 @@ void ACodeLobbyPC::LoadGame()
 {
 	auto m_SaveGame = UGameplayStatics::LoadGameFromSlot(PlayerSettingsSave, 0);
 	UPlayerSaveGame* SaveGameRef = Cast<UPlayerSaveGame>(m_SaveGame);
-	if(!IsValid(SaveGameRef))
-		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("NoLoadSaveGame"));
+	if (!IsValid(SaveGameRef))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("NoLoadSaveGame"));
+	}
 	PlayerSettings.MyPlayerName = SaveGameRef->S_PlayerInfo.MyPlayerName;
 	PlayerSettings.MyPlayerLogo = SaveGameRef->S_PlayerInfo.MyPlayerLogo;
 	//check(BaseCharacter);
